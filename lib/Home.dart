@@ -29,12 +29,8 @@ class _HomeState extends State<Home> {
   }
 
   _post() async {
-    var corpo = json.encode({
-      "userId": 120,
-      "id": null,
-      "title": "Titulo Novo",
-      "body": "Corpo da Postagem Novo"
-    });
+    Post post = new Post(120, 0, "Titulo", "Corpo da Postagem Novo");
+    var corpo = json.encode(post.toJson());
 
     http.Response response = await http.post(
       Uri.parse(_urlBase + "/posts"),
@@ -46,11 +42,52 @@ class _HomeState extends State<Home> {
     print("resposta: ${response.body}");
   }
 
-  _put() {}
+  _put() async {
+    Post post =
+        new Post(120, 0, "Titulo Alterado", "Corpo da Postagem Alterado");
+    var corpo = json.encode(post.toJson());
 
-  _patch() {}
+    http.Response response = await http.put(
+      Uri.parse(_urlBase + "/posts/2"),
+      headers: {"Content-type": "application/json; charset=UTF-8"},
+      body: corpo,
+    );
 
-  _delete() {}
+    print("resposta: ${response.statusCode}");
+    print("resposta: ${response.body}");
+  }
+
+  _patch() async {
+    Post post =
+        new Post(120, 0, "Titulo Alterado", "Corpo da Postagem Alterado");
+    var corpo = json.encode(post.toJson());
+
+    /*  var corpo = json.encode({
+      "userId": 120,
+      "body": "Corpo da Postagem Alterado",
+    });
+    */
+
+    http.Response response = await http.patch(
+      Uri.parse(_urlBase + "/posts/2"),
+      headers: {"Content-type": "application/json; charset=UTF-8"},
+      body: corpo,
+    );
+
+    print("resposta: ${response.statusCode}");
+    print("resposta: ${response.body}");
+  }
+
+  _delete() async {
+    http.Response response =
+        await http.delete(Uri.parse(_urlBase + "/posts/2"));
+
+    if (response.statusCode == 200) {
+    } else {}
+
+    print("resposta: ${response.statusCode}");
+    print("resposta: ${response.body}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +108,16 @@ class _HomeState extends State<Home> {
                     child: Text("Salvar"),
                   ),
                   ElevatedButton(
-                    onPressed: _put(),
+                    onPressed: () async {
+                      //_put();
+                      _patch();
+                    },
                     child: Text("Atualizar"),
                   ),
                   ElevatedButton(
-                    onPressed: _put(),
+                    onPressed: () async {
+                      _delete();
+                    },
                     child: Text("Deletar"),
                   ),
                 ],

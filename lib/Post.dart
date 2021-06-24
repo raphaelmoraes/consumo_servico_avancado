@@ -11,6 +11,15 @@ class Post {
     this._body,
   );
 
+  Map toJson() {
+    return {
+      "userId": this._userId,
+      "id": this._id,
+      "title": this._title,
+      "body": this._body
+    };
+  }
+
   get userId => this._userId;
 
   set userId(value) => this._userId = value;
